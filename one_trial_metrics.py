@@ -37,36 +37,36 @@ nodata: dict[CSVData, pd.DataFrame] = {
     CSVData.GraspInfo: pd.DataFrame(columns=["GraspTime", "UngraspTime", "GraspPosition(x)", "GraspPosition(y)", "GraspPosition(z)"])
 }
 # metrics we're considering
-class Metrics(NamedTuple):
-    mark_anterior: Literal[0, 3, 5] = 5 # 0 for straight line, 3 for non-straight, 5 for no mark
-    mark_posterior: Literal[0, 3, 5] = 5
-    mark_GC: Literal[0, 3, 5] = 5
+class Metrics:
+    mark_anterior: int = 5 # 0 for straight line, 3 for non-straight, 5 for no mark
+    mark_posterior: int = 5
+    mark_GC: int = 5
     per_suture_set: list[SutureMetrics] = [] # also 0 pts if there are 5 to 8 suture sets (count with len()), 3 if more than 8, 5 if less than 5
     time_taken: float = sys.float_info.max # 0 pts if in first quartile, 3 if in second, 6 if in third, 9 if in fourth
 
 # metrics to repeat for each suture set
-class SutureMetrics(NamedTuple):
-    start: Literal[0, 5] = 5 # 0 for "just proximal to incisura angularis", 5 for elsewhere
-    anterior_grasp: Literal[0, 5] = 5 # 0 for within 0.5 cm of marking
-    anterior: Literal[0, 5] = 5 # 0 for correctly anchor exchanging and then suturing
-    GC_grasp: Literal[0, 5] = 5
-    GC: Literal[0, 5] = 5
-    posterior_grasp: Literal[0, 5] = 5
-    posterior: Literal[0, 5] = 5
-    direction: Literal[0, 5] = 5 # 0 for going from distal (intestine end?) to proximal with 1-2 cm between successive sutures
-    num_bites: Literal[0, 3, 5] = 5 # 0 for 6 or 7 (oh no) bites, 3 for >7, 5 for <6
-    u_shaped: Literal[0, 5] = 5 # 0 for u-shaped suture. instruct users to do that!
-    tightened: Literal[0, 5] = 5 # 0 for proper ttag deployment and cinching, 5 for accidental ttag
-    line_GE_proximity: Literal[0, 3, 5] = 5 # 0 for line coming within 1-2 cm of GE junction, 3 if closer or within 2-3 cm, 5 if further away
-    end_out_of_fundus: Literal[0, 5] = 5 # 0 if the last bite isn't in fundus, 5 if it is
+class SutureMetrics:
+    start: int = 5 # 0 for "just proximal to incisura angularis", 5 for elsewhere
+    anterior_grasp: int = 5 # 0 for within 0.5 cm of marking
+    anterior: int = 5 # 0 for correctly anchor exchanging and then suturing
+    GC_grasp: int = 5
+    GC: int = 5
+    posterior_grasp: int = 5
+    posterior: int = 5
+    direction: int = 5 # 0 for going from distal (intestine end?) to proximal with 1-2 cm between successive sutures
+    num_bites: int = 5 # 0 for 6 or 7 (oh no) bites, 3 for >7, 5 for <6
+    u_shaped: int = 5 # 0 for u-shaped suture. instruct users to do that!
+    tightened: int = 5 # 0 for proper ttag deployment and cinching, 5 for accidental ttag
+    line_GE_proximity: int = 5 # 0 for line coming within 1-2 cm of GE junction, 3 if closer or within 2-3 cm, 5 if further away
+    end_out_of_fundus: int = 5 # 0 if the last bite isn't in fundus, 5 if it is
     did_bleed: bool = True
-    severe_bleeding: Literal[0, 5] = 5 # 0 if no severe bleeding or stopped with early cinch within 60s, 5 if not stopped
-    comm_use_helix: Literal[0, 1] = 1 # 0 for telling assistant to activate helix
-    comm_grasp: list[Literal[0, 1]] = [] # 0 for telling assistant to grasp for each bite
-    comm_ungrasp: list[Literal[0, 1]] = [] # same for ungrasping
-    comm_remove_helix: Literal[0, 1] = 1 # 0 for telling assistant to switch off helix ig? each set should go helix>ttag>cinch
-    comm_use_cinch: Literal[0, 1] = 1 # 0 for telling assistant to activate cinch
-    comm_drop_cinch: Literal[0, 1] = 1 # 0 for telling assistant to deploy cinch after tightening
+    severe_bleeding: int = 5 # 0 if no severe bleeding or stopped with early cinch within 60s, 5 if not stopped
+    comm_use_helix: int = 1 # 0 for telling assistant to activate helix
+    comm_grasp: list[int] = [] # 0 for telling assistant to grasp for each bite
+    comm_ungrasp: list[int] = [] # same for ungrasping
+    comm_remove_helix: int = 1 # 0 for telling assistant to switch off helix ig? each set should go helix>ttag>cinch
+    comm_use_cinch: int = 1 # 0 for telling assistant to activate cinch
+    comm_drop_cinch: int = 1 # 0 for telling assistant to deploy cinch after tightening
 
 gaze_targets: frozenset[str] = frozenset({"tv", "tv_stomachpos", "Instructions_TV", "floor"})
 
