@@ -31,7 +31,7 @@ nodata: dict[CSVData, pd.DataFrame] = {
     CSVData.GazeInfo: pd.DataFrame(columns=["Seconds","Target","Status"]),
     CSVData.HMDPosition: pd.DataFrame(columns=["Seconds","PositionX","PositionY","PositionZ","RotationX","RotationY","RotationZ","QuatX","QuatY","QuatZ","QuatW"]),
     CSVData.SutureInfo: pd.DataFrame(columns=["SutureSetCount","SutureCount","SutureIndex","SutureTime","IsAnchorExchangeDone","StomachPart","SuturePosition(x)","SuturePosition(y)","SuturePosition(z)"]),
-    CSVData.TechniqueInfo: pd.DataFrame(columns=["PatternType","SutureSetCount","ArrowPlacingTIme"]),
+    CSVData.TechniqueInfo: pd.DataFrame(columns=["PatternType","SutureSetCount","ArrowPlacingTime"]),
     CSVData.AssistantCalls: pd.DataFrame(columns=["Seconds","Command","Interpretation"]),
     CSVData.HMDPosition: pd.DataFrame(columns=["Seconds","PositionX","PositionY","PositionZ","RotationX","RotationY","RotationZ","QuatX","QuatY","QuatZ","QuatW"]),
     CSVData.GraspInfo: pd.DataFrame(columns=["GraspTime", "UngraspTime", "GraspPosition(x)", "GraspPosition(y)", "GraspPosition(z)"])
@@ -44,7 +44,7 @@ class Metrics:
     per_suture_set: list[SutureMetrics] = [] # also 0 pts if there are 5 to 8 suture sets (count with len()), 3 if more than 8, 5 if less than 5
     time_taken: float = sys.float_info.max # 0 pts if in first quartile, 3 if in second, 6 if in third, 9 if in fourth
 
-# metrics to repeat for each suture set
+# metrics to... not actually repeat for each suture set? rather take the best of all sets?
 class SutureMetrics:
     start: int = 5 # 0 for "just proximal to incisura angularis", 5 for elsewhere
     anterior_grasp: int = 5 # 0 for within 0.5 cm of marking
@@ -76,7 +76,6 @@ def main(trial: Path):
         name: load_csv(trial, name)
         for name in CSVData
     }
-    # TODO
     metrics = Metrics()
     # skip all insertion metrics
     # metrics 10-12 (marking, fig 4): add zones to argonparallelinfo (DONE) or the cross product thing to argonmarkinfo
@@ -84,27 +83,33 @@ def main(trial: Path):
         # all the marking metrics start at 5, then we lower them to 3 or 0
         # also api columns aren't valid python identifiers so let's index by number
         score: int = 0 if math.hypot(hit[1], hit[2], hit[3]) <= 1.0 else 3
-        if hit[4].casefold() == "anterior":
+        if hit[4] == "Anterior":
             metrics.mark_anterior = min(metrics.mark_anterior, score)
-        elif hit[4].casefold() == "posterior":
+        elif hit[4] == "Posterior":
             metrics.mark_posterior = min(metrics.mark_posterior, score)
-        elif hit[4].casefold() == "greatercurvature":
+        elif hit[4] == "GreaterCurvature":
             metrics.mark_GC = min(metrics.mark_GC, score)
+    # time taken: assume the operation is complete when the last suture set's cinch is dropped
+    metrics.time_taken = data[CSVData.TechniqueInfo]["ArrowPlacingTime"].max()
     num_suture_sets: int = data[CSVData.SutureInfo]["SutureSetCount"].max()
-    for i_suture_set in range(1, num_suture_sets + 1):
-        # something here
-        pass
-    # metrics 17-23 (suturing, fig 6): compare sutureinfo to graspinfo, argon(mark|parallel)info. positions are recorded in unity units - figure out how big 0.5 cm is
-    # metric 24 (fig 6): wtf is a suture direction? gap between bites?
-    # metric 25 (fig 6): skip, all bites are full thickness
-    # metric 26 (fig 6): just count from sutureinfo.suturecount
-    # metric 27 (fig 6): techniqueinfo is supposed to have this. instruct user to do u-shaped sutures, review recorder code
-    # metric 28 (fig 6): premature deployment is if ttag drops while it's not the active instrument. track that somewhere, new recorder maybe?
-    # metric 29 (fig 7): note this ge junction's position, do linear algebra to figure out proximity
-    # metric 30 (fig 7): last suture's stomachpart
-    # metric 33 (fig 7): just count from sutureinfo.suturesetcount
-    # metric 35 (fig 8): bleedingfinishtime
-    # metrics 38-45 (fig 10): 40 is grasping and 41 is ungrasping, ignore 39 and 42 unless we bring back extend/retract commands, others correspond to commands fairly obviously 
+    for i_suture_set in range(num_suture_sets):
+        this_set = SutureMetrics() # TODO
+        these_bites: pd.DataFrame = data[CSVData.SutureInfo].loc[data[CSVData.SutureInfo]["SutureSetCount"] == (i_suture_set+1)]
+        # metrics 17-23 (suturing, fig 6): compare sutureinfo to graspinfo, argon(mark|parallel)info. positions are recorded in unity units - figure out how big 0.5 cm is
+        # metric 24 (fig 6): what is a suture direction? gap between bites?
+        # metric 25 (fig 6): skip, all bites are full thickness
+        # metric 26 (fig 6): just count from sutureinfo.suturecount
+        this_set.num_bites = 5 if len(these_bites) < 6 else (3 if len(these_bites) > 7 else 0)
+        # metric 27 (fig 6): techniqueinfo is supposed to have this. instruct user to do u-shaped sutures, review recorder code
+        this_set.u_shaped = 0 if data[CSVData.TechniqueInfo]["PatternType"].iloc[i_suture_set] == "U" else 5
+        # metric 28 (fig 6): premature deployment is if ttag drops while it's not the active instrument. track that somewhere, new recorder maybe?
+        # metric 29 (fig 7): note this ge junction's position, do linear algebra to figure out proximity
+        # metric 30 (fig 7): last suture's stomachpart
+        # metric 33 (fig 7): just count from sutureinfo.suturesetcount
+        # metric 35 (fig 8): bleedingfinishtime
+        # brisk_bleeds: pd.DataFrame = data[CSVData.]
+        # metrics 38-45 (fig 10): 40 is grasping and 41 is ungrasping, ignore 39 and 42 unless we bring back extend/retract commands, others correspond to commands fairly obviously
+        metrics.per_suture_set.append(this_set)
 
 def load_csv(trial: Path, csv: CSVData) -> pd.DataFrame:
     try:
