@@ -1,5 +1,7 @@
 # ah the most serene cargo cult of https://github.com/github/gitignore
 
+.vscode/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
