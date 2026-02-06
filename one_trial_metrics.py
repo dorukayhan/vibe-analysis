@@ -74,7 +74,7 @@ class SutureMetrics:
 gaze_targets: frozenset[str] = frozenset({"tv", "tv_stomachpos", "Instructions_TV", "floor"})
 incisura_angularis: Plane = Plane([12.87477, 1.29898, -0.5905], [-0.5038502, -0.04318409, -0.8627108])
 max_incisura_angularis_distance: float = float("nan")
-one_cm: float = float("nan")
+one_cm: float = float("nan") # assume black body is like 11 mm
 
 def main(trial: Path) -> Metrics:
     print("loading the csvs...")
@@ -105,7 +105,9 @@ def main(trial: Path) -> Metrics:
         # metrics 17-23 (suturing, fig 6): compare sutureinfo to graspinfo, argon(mark|parallel)info. positions are recorded in unity units - figure out how big 0.5 cm is
         # metric 17
         first_pos = these_bites[["SuturePosition(x)","SuturePosition(y)","SuturePosition(z)"]].iloc[0]
-        this_set.start = 5 if incisura_angularis.distance_point(first_pos) > MAX_INCISURA_ANGULARIS_DISTANCE else 0
+        first_pos_coords = (first_pos["SuturePosition(x)"], first_pos["SuturePosition(y)"], first_pos["SuturePosition(z)"])
+        # FIXME PROXIMAL by like a cm or more
+        this_set.start = 5 if incisura_angularis.distance_point(first_pos_coords) > max_incisura_angularis_distance else 0
         # metrics 18-19
         anterior_grasps: pd.DataFrame = these_grasps.loc[these_grasps["StomachZone"] == "Anterior"]
         anterior_bites: pd.DataFrame = these_bites.loc[these_bites["StomachPart"] == "Anterior"]
@@ -121,7 +123,7 @@ def main(trial: Path) -> Metrics:
         posterior_bites: pd.DataFrame = these_bites.loc[these_bites["StomachPart"] == "Posterior"]
         this_set.posterior_grasp = grasps_close_enough(posterior_grasps, data[CSVData.ArgonMarkInfo])
         this_set.posterior = 5 if posterior_bites.empty else 0
-        # metric 24 (fig 6): incisura angularis plane points in general directino of proxima, let's take its normal as proximal direction
+        # metric 24 (fig 6): incisura angularis plane points in general direction of proxima, let's take its normal as proximal direction
         this_set.direction = 0
         for i in range(len(these_bites)-1):
             fore: pd.Series = these_bites.iloc[i]
@@ -141,7 +143,7 @@ def main(trial: Path) -> Metrics:
         # metric 28 (fig 6): premature deployment is if ttag drops while it's not the active instrument. track that somewhere, new recorder maybe? ok new recorder
         bad_ttags: pd.DataFrame = data[CSVData.PrematureTTag].loc[data[CSVData.PrematureTTag]["SutureSetCount"] == i_suture_set+1]
         this_set.tightened = 0 if len(bad_ttags) == 0 else 5
-        # metric 29 (fig 7): note this ge junction's position, do linear algebra to figure out proximity ACTUALLY ASK MARK
+        # metric 29 (fig 7): apply only to the last suture set
         # metric 30 (fig 7): last suture's stomachpart
         this_set.end_out_of_fundus = 0 if these_bites.iloc[len(these_bites)-1]["StomachPart"] != "Fundus" else 5
         # metric 33 (fig 7): just count from sutureinfo.suturesetcount
@@ -178,4 +180,5 @@ def grasps_close_enough(grasps: pd.DataFrame, marking: pd.DataFrame) -> int:
     return 5
 
 if __name__ == "__main__":
+    import json
     print(json.dumps(main(Path(sys.argv[1]))))

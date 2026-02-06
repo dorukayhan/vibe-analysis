@@ -1,6 +1,7 @@
 # ah the most serene cargo cult of https://github.com/github/gitignore
 
 .vscode/
+.idea/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
