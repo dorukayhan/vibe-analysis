@@ -65,6 +65,10 @@ def analyze(calls: pd.DataFrame, out: Path, *, all_trials: bool=False) -> None:
     print(calls_per_success[(False, True)].value_counts(subset=["Intent"]) / len(calls))
     print("fraction of commands that neither whisper nor llm understood:")
     print(calls_per_success[(False, False)].value_counts(subset=["Intent", "Interpretation"]).sort_index() / len(calls))
+    print("raw numbers of commands of the above:")
+    print(calls_per_success[(True, False)].value_counts(subset=["Intent", "Interpretation"]).sort_index())
+    print(calls_per_success[(False, True)].value_counts(subset=["Intent"]))
+    print(calls_per_success[(False, False)].value_counts(subset=["Intent", "Interpretation"]).sort_index())
     if all_trials:
         print("number of commands that whisper misheard:")
         whisper_failed: pd.DataFrame = calls.loc[~calls["CorrectTranscription"]]
@@ -98,11 +102,11 @@ def analyze_perf(calls: pd.DataFrame, out: Path) -> None:
     nonfirst_calls: pd.DataFrame = perf.drop(first_calls.index, axis="index")
     print_h2("ALL")
     print("summary stats of all calls' whisper (stt) and llm inference times:")
-    print(perf[["STTInferenceTime", "LLMInferenceTime"]].describe())
+    print(perf[["STTInferenceTime", "LLMInferenceTime"]].describe(percentiles=[0.25, 0.5, 0.75, 0.99]))
     print("summary stats of each trial's first call:")
-    print(first_calls[["STTInferenceTime", "LLMInferenceTime"]].describe())
+    print(first_calls[["STTInferenceTime", "LLMInferenceTime"]].describe(percentiles=[0.25, 0.5, 0.75, 0.99]))
     print("summary stats of each trial's subsequent calls:")
-    print(nonfirst_calls[["STTInferenceTime", "LLMInferenceTime"]].describe())
+    print(nonfirst_calls[["STTInferenceTime", "LLMInferenceTime"]].describe(percentiles=[0.25, 0.5, 0.75, 0.99]))
     print("t-testing first and subsequent calls' llm inference times...", end="", flush=True)
     llm_t_test = scipy.stats.ttest_ind(first_calls["LLMInferenceTime"], nonfirst_calls["LLMInferenceTime"], equal_var=False, nan_policy="raise", alternative="greater")
     print(f"done!\n{llm_t_test}")
@@ -110,9 +114,9 @@ def analyze_perf(calls: pd.DataFrame, out: Path) -> None:
     stt_t_test = scipy.stats.ttest_ind(first_calls["STTInferenceTime"], nonfirst_calls["STTInferenceTime"], equal_var=False, nan_policy="raise")
     print(f"done!\n{stt_t_test}")
     # also save summary stats. finding t-tests in stdout easy enough by searching for "TtestResult"
-    perf[["STTInferenceTime", "LLMInferenceTime"]].describe().to_csv(out / "summary overall.csv")
-    first_calls[["STTInferenceTime", "LLMInferenceTime"]].describe().to_csv(out / "summary first.csv")
-    nonfirst_calls[["STTInferenceTime", "LLMInferenceTime"]].describe().to_csv(out / "summary nonfirst.csv")
+    perf[["STTInferenceTime", "LLMInferenceTime"]].describe(percentiles=[0.25, 0.5, 0.75, 0.99]).to_csv(out / "summary overall.csv")
+    first_calls[["STTInferenceTime", "LLMInferenceTime"]].describe(percentiles=[0.25, 0.5, 0.75, 0.99]).to_csv(out / "summary first.csv")
+    nonfirst_calls[["STTInferenceTime", "LLMInferenceTime"]].describe(percentiles=[0.25, 0.5, 0.75, 0.99]).to_csv(out / "summary nonfirst.csv")
     # now consider each trial
     for trial in calls["Trial"].unique():
         print_h2(f"TRIAL {trial}")
