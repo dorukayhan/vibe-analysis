@@ -1,6 +1,6 @@
-print("importing pandas...")
-import pandas as pd
 import sys
+print("importing pandas...", file=sys.stderr)
+import pandas as pd
 from pathlib import Path
 from typing import Final
 
@@ -24,7 +24,7 @@ def main(fcalls: Path) -> None:
     change_means_cinch: pd.Series[bool] = calls["Trial"].isin(TRIALS_CINCH_CHANGE)
     # ok now run the battery
     print_h1("ALL TRIALS")
-    analyze(calls, out / "all trials")
+    analyze(calls, out / "all trials", per_trial=True)
     print_h1("BEFORE CLARIFYING RELEASE MEANS UNGRASP")
     analyze(calls.loc[~release_means_ungrasp], out / "before clarifying release means ungrasp")
     print_h1("AFTER CLARIFYING RELEASE MEANS UNGRASP")
@@ -36,26 +36,32 @@ def main(fcalls: Path) -> None:
     print_h1("AFTER RELEASE=UNGRASP, EXCEPT CHANGE=CINCH")
     analyze(calls.loc[release_means_ungrasp & ~change_means_cinch], out / "after release-ungrasp, except change-cinch")
 
-def analyze(calls: pd.DataFrame, out: Path) -> None:
+def analyze(calls: pd.DataFrame, out: Path, *, per_trial: bool=False) -> None:
     out.mkdir(exist_ok=True)
     # count all the correct- and mis-understandings, save misunderstandings
     confusion_all: Confusion = get_ai_confusion(calls)
     calls_per_success: dict[tuple[bool, bool], pd.DataFrame] = {k: calls.loc[v] for k, v in confusion_all.items()}
+    assert sum(map(len, calls_per_success.values())) == len(calls)
     print_ai_confusion(confusion_all, "ALL")
     calls_per_success[(True, False)].to_csv(out / "stt pass llm fail.csv", index=False)
     calls_per_success[(False, True)].to_csv(out / "stt fail llm pass.csv", index=False)
     calls_per_success[(False, False)].to_csv(out / "stt fail llm fail.csv", index=False)
-    # count misunderstandings in each trial
-    confusion_per_trial: dict[int, Confusion] = {trial: get_ai_confusion(calls.loc[calls["Trial"] == trial]) for trial in calls["Trial"].unique()}
-    for t in confusion_per_trial:
-        print_ai_confusion(confusion_per_trial[t], f"TRIAL {t}")
-    pd.DataFrame({k: to_counts(v) for k, v in confusion_per_trial.items()}).to_csv(out / "per-trial confusions.csv")
+    # count misunderstandings in each trial, or just list which trials were considered
+    if per_trial:
+        confusion_per_trial: dict[int, Confusion] = {trial: get_ai_confusion(calls.loc[calls["Trial"] == trial]) for trial in calls["Trial"].unique()}
+        for t in confusion_per_trial:
+            print_ai_confusion(confusion_per_trial[t], f"TRIAL {t}")
+        pd.DataFrame({k: to_counts(v) for k, v in confusion_per_trial.items()}).to_csv(out / "per-trial confusions.csv")
+    else:
+        print(f"looked into trials {calls["Trial"].unique()}")
     # which commands did the llm misunderstood?
-    print_h2("LLM MISUNDERSTANDINGS")
-    print("commands that whisper understood but llm didn't:")
-    print(calls_per_success[(True, False)].value_counts(subset=["Intent", "Interpretation"]).sort_index())
-    print("commands that neither whisper nor llm understood:")
-    print(calls_per_success[(False, False)].value_counts(subset=["Intent", "Interpretation"]).sort_index())
+    print_h2("MISUNDERSTANDINGS")
+    print("fraction of commands that whisper understood but llm didn't:")
+    print(calls_per_success[(True, False)].value_counts(subset=["Intent", "Interpretation"]).sort_index() / len(calls))
+    print("fraction of commands that whisper didn't understand but llm somehow did:")
+    print(calls_per_success[(False, True)].value_counts(subset=["Intent"]) / len(calls))
+    print("fraction of commands that neither whisper nor llm understood:")
+    print(calls_per_success[(False, False)].value_counts(subset=["Intent", "Interpretation"]).sort_index() / len(calls))
 
 def print_h2(header: str) -> None:
     print(header.center(HEADER_WIDTH, "*"))
