@@ -6,7 +6,7 @@ import sys
 from enum import StrEnum
 from pathlib import Path
 from skspatial.objects import Plane
-from typing import Literal, NamedTuple
+from typing import Final
 
 # type checked names for each recorder's file
 class CSVData(StrEnum):
@@ -24,7 +24,7 @@ class CSVData(StrEnum):
     GraspInfo = "GraspInfo"
     PrematureTTag = "PrematureTTag"
 # in case the thing with recorders truncating files happens again
-nodata: dict[CSVData, pd.DataFrame] = {
+nodata: Final[dict[CSVData, pd.DataFrame]] = {
     CSVData.ArgonMarkInfo: pd.DataFrame(columns=["Zone","ArgonTime","DistanceToZone","MarkPosition(x)","MarkPosition(y)","MarkPosition(z)"]),
     CSVData.ArgonParallelInfo: pd.DataFrame(columns=["CrossProduct(x)","CrossProduct(y)","CrossProduct(z)","StomachZones"]),
     CSVData.BenchmarkInfo: pd.DataFrame(columns=["SutureSetCount","SutureCount","FPS","RenderTime","SolverTime"]),
@@ -45,6 +45,7 @@ class Metrics:
     mark_posterior: int = 5
     mark_GC: int = 5
     per_suture_set: list[SutureMetrics] = [] # also 0 pts if there are 5 to 8 suture sets (count with len()), 3 if more than 8, 5 if less than 5
+    GE_approach: int = 5 # 0 if last suture within 1-2 cm of GE junction, 3 if closer or within 2-3 cm, 5 if further away
     time_taken: float = sys.float_info.max # 0 pts if in first quartile, 3 if in second, 6 if in third, 9 if in fourth
 
 # metrics to repeat for each suture set
@@ -60,7 +61,6 @@ class SutureMetrics:
     num_bites: int = 5 # 0 for 6 or 7 (oh no) bites, 3 for >7, 5 for <6
     u_shaped: int = 5 # 0 for u-shaped suture. instruct users to do that!
     tightened: int = 5 # 0 for proper ttag deployment and cinching, 5 for accidental ttag
-    line_GE_proximity: int = 5 # 0 for line coming within 1-2 cm of GE junction, 3 if closer or within 2-3 cm, 5 if further away
     end_out_of_fundus: int = 5 # 0 if the last bite isn't in fundus, 5 if it is
     did_bleed: bool = True
     severe_bleeding: int = 5 # 0 if no severe bleeding or stopped with early cinch within 60s, 5 if not stopped
@@ -71,10 +71,10 @@ class SutureMetrics:
     comm_use_cinch: int = 1 # 0 for telling assistant to activate cinch
     comm_drop_cinch: int = 1 # 0 for telling assistant to deploy cinch after tightening
 
-gaze_targets: frozenset[str] = frozenset({"tv", "tv_stomachpos", "Instructions_TV", "floor"})
-incisura_angularis: Plane = Plane([12.87477, 1.29898, -0.5905], [-0.5038502, -0.04318409, -0.8627108])
-max_incisura_angularis_distance: float = float("nan")
-one_cm: float = float("nan") # assume black body is like 11 mm
+gaze_targets: Final[frozenset[str]] = frozenset({"tv", "tv_stomachpos", "Instructions_TV", "floor"})
+incisura_angularis: Final[Plane] = Plane([12.87477, 1.29898, -0.5905], [-0.5038502, -0.04318409, -0.8627108])
+ge_junction: Final[Plane] = Plane([12.7001, 1.34803, -0.60766], [-0.661858, 0.589504, -0.4630647])
+one_cm: Final[float] = 0.0101 / 1.1 # rubberbase_low's diameter is about 0.0101 unity units. mark told me it's like 11 mm irl. so this should be 1 cm in simulator units
 
 def main(trial: Path) -> Metrics:
     print("loading the csvs...")
@@ -106,8 +106,7 @@ def main(trial: Path) -> Metrics:
         # metric 17
         first_pos = these_bites[["SuturePosition(x)","SuturePosition(y)","SuturePosition(z)"]].iloc[0]
         first_pos_coords = (first_pos["SuturePosition(x)"], first_pos["SuturePosition(y)"], first_pos["SuturePosition(z)"])
-        # FIXME PROXIMAL by like a cm or more
-        this_set.start = 5 if incisura_angularis.distance_point(first_pos_coords) > max_incisura_angularis_distance else 0
+        this_set.start = 5 if incisura_angularis.distance_point_signed(first_pos_coords) < one_cm else 0
         # metrics 18-19
         anterior_grasps: pd.DataFrame = these_grasps.loc[these_grasps["StomachZone"] == "Anterior"]
         anterior_bites: pd.DataFrame = these_bites.loc[these_bites["StomachPart"] == "Anterior"]
@@ -143,14 +142,15 @@ def main(trial: Path) -> Metrics:
         # metric 28 (fig 6): premature deployment is if ttag drops while it's not the active instrument. track that somewhere, new recorder maybe? ok new recorder
         bad_ttags: pd.DataFrame = data[CSVData.PrematureTTag].loc[data[CSVData.PrematureTTag]["SutureSetCount"] == i_suture_set+1]
         this_set.tightened = 0 if len(bad_ttags) == 0 else 5
-        # metric 29 (fig 7): apply only to the last suture set
+        # metric 29 (fig 7) done after the loop
         # metric 30 (fig 7): last suture's stomachpart
         this_set.end_out_of_fundus = 0 if these_bites.iloc[len(these_bites)-1]["StomachPart"] != "Fundus" else 5
         # metric 33 (fig 7): just count from sutureinfo.suturesetcount
         # metric 35 (fig 8): bleedingfinishtime
         # bleeding only starts with a bite, which only happens between a grasp and ungrasp. so what if i...
+        # FIXME why doesn't cinching visually stop bleeding in the sim? might be affecting the data too
         brisk_bleeds: pd.DataFrame = data[CSVData.BleedingInfo].loc[data[CSVData.BleedingInfo]["BleedingType"] == "Brisk"]
-        btimes: pd.Series = brisk_bleeds["BleedingStartTime"]
+        btimes: pd.Series[float] = brisk_bleeds["BleedingStartTime"]
         our_bbs: pd.DataFrame = brisk_bleeds.loc[these_grasps["GraspTime"].min() <= btimes <= these_grasps["UngraspTime"].max()]
         this_set.did_bleed = len(our_bbs) > 0
         if this_set.did_bleed:
@@ -163,13 +163,25 @@ def main(trial: Path) -> Metrics:
         this_set.comm_use_cinch = 0 if len(these_calls[these_calls["Interpretation"] == "ActivateCinch"]) > 0 else 1
         this_set.comm_drop_cinch = 0 if len(these_calls[these_calls["Interpretation"] == "DeployCinch"]) > 0 else 1
         metrics.per_suture_set.append(this_set)
+    # and metric 29
+    last_suture: pd.Series = data[CSVData.SutureInfo].iloc[-1]
+    print(last_suture) # i'm suspicious about .iloc[-1]
+    last_suture_coords = (last_suture["SuturePosition(x)"], last_suture["SuturePosition(y)"], last_suture["SuturePosition(z)"])
+    proximity = ge_junction.distance_point_signed(last_suture_coords)
+    are_we_even_on_lesser = ge_junction.point.distance_point(last_suture_coords) > 7*one_cm
+    if are_we_even_on_lesser or proximity > 3*one_cm:
+        metrics.GE_approach = 5
+    elif proximity < one_cm or (2*one_cm < proximity <= 3*one_cm):
+        metrics.GE_approach = 3
+    else:
+        metrics.GE_approach = 0
     return metrics
 
 def load_csv(trial: Path, csv: CSVData) -> pd.DataFrame:
     try:
         return pd.read_csv(trial / (csv + ".csv"))
     except pd.errors.EmptyDataError:
-        print(f"{csv} is empty!", file=sys.stderr)
+        print(f"{trial / (csv + ".csv")} is empty!", file=sys.stderr)
         return nodata[csv]
 
 def grasps_close_enough(grasps: pd.DataFrame, marking: pd.DataFrame) -> int:
