@@ -355,6 +355,7 @@ def main(argv: list[str]=[]) -> pd.DataFrame:
     atbs_expert_vs_novice: tuple[str, TtestResult] = WELCH(list(atbs_expert.values()), list(atbs_novice.values()))
     atbs_gamer_vs_not: tuple[str, TtestResult] = WELCH(list(atbs_gamer.values()), list(atbs_nongamer.values()))
     print_t_test(f"expert-novice ATBS", atbs_expert_vs_novice)
+    print(f"expert mean ATBS {statistics.mean(atbs_expert.values())}, novice mean ATBS {statistics.mean(atbs_novice.values())}")
     print_t_test(f"gamer-nongamer ATBS", atbs_gamer_vs_not)
     # metric t-tests
     # video metrics
@@ -394,6 +395,7 @@ def main(argv: list[str]=[]) -> pd.DataFrame:
     total_expert_vs_novice = WELCH(vmt_expert + perf_expert, vmt_novice + perf_novice)
     total_gamer_vs_not = WELCH(vmt_gamer + perf_gamer, vmt_nongamer + perf_nongamer)
     print_t_test(f"expert-novice total metric", total_expert_vs_novice)
+    print(f"total metric means: experts {statistics.mean(vmt_expert + perf_expert)}, novices {statistics.mean(vmt_novice + perf_novice)}")
     print_t_test(f"gamer-nongamer total metric", total_gamer_vs_not)
     # most time taken for a whole trial????
     # max_trial_times
@@ -422,6 +424,7 @@ def main(argv: list[str]=[]) -> pd.DataFrame:
         expert_scores: pd.Series = video_scores[col].loc[experts.index]
         novice_scores: pd.Series = video_scores[col].loc[novices.index]
         print_t_test(f"expert-novice {col}", WELCH(expert_scores, novice_scores))
+        print(f"expert mean: {statistics.mean(expert_scores)} novice mean: {statistics.mean(novice_scores)}")
     # wait successful bites points has p<0.05?
     print_t_test("expert-novice bite count", WELCH(video_metrics["Suture: Successful Bites"].loc[experts.index], video_metrics["Suture: Successful Bites"].loc[novices.index]))
     # confusion matrix for full cinch?

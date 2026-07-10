@@ -1,0 +1,30 @@
+,count,mean,std,min,25%,50%,75%,max
+Marking Look Realism,5.0,3.4,0.8944271909999159,2.0,3.0,4.0,4.0,4.0
+Grasping Look Realism,5.0,2.8,0.8366600265340756,2.0,2.0,3.0,3.0,4.0
+Suturing Needle Look Realism,5.0,3.2,1.3038404810405297,2.0,2.0,3.0,4.0,5.0
+Suturing Overall Look Realism,5.0,2.6,0.5477225575051661,2.0,2.0,3.0,3.0,3.0
+Suturing Overall Feel Realism,5.0,3.0,0.7071067811865476,2.0,3.0,3.0,3.0,4.0
+Anchor Exchange Look Realism,5.0,2.8,0.8366600265340756,2.0,2.0,3.0,3.0,4.0
+Cinch Look Realism,5.0,2.8,0.8366600265340756,2.0,2.0,3.0,3.0,4.0
+Instrument Handling Look Realism,5.0,3.4,1.140175425099138,2.0,3.0,3.0,4.0,5.0
+Anatomy Look Realism,5.0,3.2,1.0954451150103321,2.0,3.0,3.0,3.0,5.0
+Overall Look Realism,5.0,2.8,0.8366600265340756,2.0,2.0,3.0,3.0,4.0
+Overall Mechanical Realism,5.0,3.0,1.224744871391589,2.0,2.0,3.0,3.0,5.0
+Bleeding Realism,5.0,3.0,1.4142135623730951,2.0,2.0,2.0,4.0,5.0
+Haptic Realism,5.0,2.8,1.3038404810405297,2.0,2.0,2.0,3.0,5.0
+Haptic Usefulness,5.0,3.0,1.4142135623730951,2.0,2.0,2.0,4.0,5.0
+Tube Responsiveness/Accuracy,5.0,2.4,0.8944271909999159,1.0,2.0,3.0,3.0,3.0
+Suture Trigger Responsiveness,5.0,2.6,0.8944271909999159,2.0,2.0,2.0,3.0,4.0
+Helix Responsiveness,5.0,3.2,1.3038404810405297,2.0,2.0,3.0,4.0,5.0
+Overall Feel Realism,5.0,2.6,0.8944271909999159,2.0,2.0,2.0,3.0,4.0
+Overall Immersiveness,5.0,3.6,0.5477225575051661,3.0,3.0,4.0,4.0,4.0
+VR Effectiveness,5.0,3.2,1.0954451150103321,2.0,3.0,3.0,3.0,5.0
+Bird's Eye Effectiveness,5.0,4.0,1.0,3.0,3.0,4.0,5.0,5.0
+Overall Responsiveness,5.0,3.0,1.5811388300841898,1.0,2.0,3.0,4.0,5.0
+Hand-Eye Coordination Usefulness,5.0,3.2,1.4832396974191326,1.0,3.0,3.0,4.0,5.0
+Overall Training Usefulness,5.0,3.2,1.3038404810405297,2.0,2.0,3.0,4.0,5.0
+Assessment Trustworthiness,5.0,3.0,1.224744871391589,2.0,2.0,3.0,3.0,5.0
+OR Assistant Importance,5.0,4.0,1.224744871391589,2.0,4.0,4.0,5.0,5.0
+Virtual Assistant Helix Importance,5.0,3.8,1.0954451150103321,2.0,4.0,4.0,4.0,5.0
+Virtual Assistant Cinch Importance,5.0,4.0,0.7071067811865476,3.0,4.0,4.0,4.0,5.0
+Virtual Assistant Overall Importance,5.0,4.4,0.8944271909999159,3.0,4.0,5.0,5.0,5.0

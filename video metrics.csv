@@ -1,0 +1,15 @@
+﻿Start Date,End Date,Recorded Date,Response ID,Trials,Trials Minus Crashes,Procedure Progress,Failure Reason,Marking: Left Stomach,Marking: Returned After Leaving,Marking: Mark Type,Marking: Time Taken,Suture: Left Stomach,Suture: Returned After Leaving,Suture: U-Shaped Suture,Suture: Successful Bites,Suture: Anchor Exchange Before First Bite,Suture: Bites Near Marks,Suture: Accidental Anchor Exchanges,Suture: Full Cinch,Suture: Dropped Cinch,Suture: Time Taken
+2025-06-04 08:22,2025-06-04 09:36,2025-06-04 09:36,R_5qVjsvNV1nUQQkF,1,1,partial suture,left stomach,yes,yes,dots,226.807,yes,yes,yes,2,no,1,2,no,no,329.641
+2025-06-04 08:27,2025-06-04 12:17,2025-06-04 12:17,R_5HRCaY9LEPHziQY,1,1,partial suture,gave up,yes,yes,parallel lines,559.051,yes,yes,yes,2,yes,1,2,no,no,433.447
+2025-06-04 12:19,2025-06-04 12:47,2025-06-04 12:47,R_60OsKhgbCIBwRyd,1,1,full marking,sim stopped responding,yes,yes,parallel lines,595.342,yes,no,no,0,yes,0,0,no,no,283.495
+2025-06-04 11:13,2025-06-04 13:27,2025-06-04 13:27,R_5mSw8HPevBLdV4d,2,1,complete,,yes,yes,dots,195.468,yes,yes,yes,4,no,,3,yes,near ttag,597.66
+2025-06-04 13:48,2025-06-04 14:25,2025-06-04 14:25,R_3do5dDARlTtFow2,2,1,cinched,left stomach,yes,yes,dots,277.756,yes,yes,yes,3,yes,,2,yes,no,765.391
+2025-06-05 07:58,2025-06-05 08:40,2025-06-05 08:40,R_3NQyd680PZZcMFY,1,1,complete,,yes,yes,dots,259.662,no,,no,3,yes,1,2,no,near ttag,609.885
+2025-06-05 14:50,2025-06-05 15:29,2025-06-05 15:29,R_3Hkd05oftH0A6pH,1,1,complete,,yes,yes,something else,170.267,yes,yes,yes,3,yes,0,3,no,near ttag,509.15
+2025-06-05 15:38,2025-06-05 15:56,2025-06-05 15:56,R_79nPOftvEFuZG7H,1,1,complete,,no,,parallel lines,139.729,no,,yes,3,yes,3,0,no,near ttag,291.566
+2025-06-05 15:57,2025-06-05 16:29,2025-06-05 16:29,R_32xqPOxwfN2c99H,4,2,complete,,yes,yes,nonparallel lines,75.752,no,,yes,5,yes,,3,no,near ttag,268
+2025-06-06 09:53,2025-06-06 10:24,2025-06-06 10:24,R_31iOAJPZHN3HzBN,1,1,partial suture,sim crashed,yes,yes,dots,291.033,no,,no,1,yes,0,0,no,no,639.007
+2025-06-06 12:00,2025-06-06 12:51,2025-06-06 12:51,R_5fW7FlSpdkUrMsx,2,1,cinched,gave up,no,,something else,153.472,no,,yes,3,yes,0,1,yes,no,709.12
+2025-06-06 12:51,2025-06-06 13:13,2025-06-06 13:13,R_1pxhkUPBiImXy49,2,2,complete,,yes,yes,nonparallel lines,224.521,no,,no,3,yes,1,1,yes,not near ttag,515.32
+2025-06-06 14:13,2025-06-06 14:53,2025-06-06 14:53,R_1iqcLpIrD5JO3Sm,3,2,cinched,"stomach disappeared, didn't bother to drop cinch",no,,nonparallel lines,216.448,no,,yes,2,yes,2,1,yes,no,486.8
+2025-06-06 15:34,2025-06-06 16:01,2025-06-06 16:01,R_7AR4rAcE50b1LFO,3,2,complete,,yes,yes,dots,215.797,yes,yes,yes,2,yes,,2,yes,near ttag,509.382

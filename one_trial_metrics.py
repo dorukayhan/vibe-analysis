@@ -1,3 +1,4 @@
+import dataclasses
 import math
 import numpy as np
 print("importing pandas...")
@@ -40,19 +41,20 @@ nodata: Final[dict[CSVData, pd.DataFrame]] = {
     CSVData.PrematureTTag: pd.DataFrame(columns=["SutureSetCount","Seconds"])
 }
 # metrics we're considering
+@dataclasses.dataclass
 class Metrics:
     mark_anterior: int = 5 # 0 for straight line, 3 for non-straight, 5 for no mark
     mark_posterior: int = 5
     mark_GC: int = 5
-    per_suture_set: list[SutureMetrics] = [] # also 0 pts if there are 5 to 8 suture sets (count with len()), 3 if more than 8, 5 if less than 5
+    per_suture_set: list[SutureMetrics] = dataclasses.field(default_factory=list) # also 0 pts if there are 5 to 8 suture sets (count with len()), 3 if more than 8, 5 if less than 5
     GE_approach: int = 5 # 0 if last suture within 1-2 cm of GE junction, 3 if closer or within 2-3 cm, 5 if further away
     time_taken: float = sys.float_info.max # 0 pts if in first quartile, 3 if in second, 6 if in third, 9 if in fourth
-
 # metrics to repeat for each suture set
+@dataclasses.dataclass
 class SutureMetrics:
     start: int = 5 # 0 for "just proximal to incisura angularis", 5 for elsewhere
-    anterior_grasp: int = 5 # 0 for within 0.5 cm of marking
-    anterior: int = 5 # 0 for correctly anchor exchanging and then suturing
+    anterior_grasp: int = 5 # 0 for within 0.5 cm of marking, for each [zone]_grasp
+    anterior: int = 5 # 0 for correctly anchor exchanging and then suturing, for each [zone]
     GC_grasp: int = 5
     GC: int = 5
     posterior_grasp: int = 5
@@ -85,19 +87,24 @@ def main(trial: Path) -> Metrics:
     metrics = Metrics()
     # skip all insertion metrics
     # metrics 10-12 (marking, fig 4): add zones to argonparallelinfo (DONE) or the cross product thing to argonmarkinfo
+    print("***ANALYZING MARKING***")
     for hit in data[CSVData.ArgonParallelInfo].itertuples(name=CSVData.ArgonParallelInfo):
         # all the marking metrics start at 5, then we lower them to 3 or 0
         # also api columns aren't valid python identifiers so let's index by number
         score: int = 0 if math.hypot(hit[1], hit[2], hit[3]) <= 1.0 else 3
         if hit[4] == "Anterior":
+            print(f"anterior mark! cross products: {hit[1]} {hit[2]} {hit[3]}")
             metrics.mark_anterior = min(metrics.mark_anterior, score)
         elif hit[4] == "Posterior":
+            print(f"posterior mark! cross products: {hit[1]} {hit[2]} {hit[3]}")
             metrics.mark_posterior = min(metrics.mark_posterior, score)
         elif hit[4] == "GreaterCurvature":
+            print(f"greater curvature mark! cross products: {hit[1]} {hit[2]} {hit[3]}")
             metrics.mark_GC = min(metrics.mark_GC, score)
     metrics.time_taken = data[CSVData.FrameRates]["Seconds"].max()
     num_suture_sets: int = data[CSVData.SutureInfo]["SutureSetCount"].max()
     for i_suture_set in range(num_suture_sets):
+        print(f"***ANALYZING SUTURE SET {i_suture_set+1}")
         this_set = SutureMetrics() # TODO
         these_bites: pd.DataFrame = data[CSVData.SutureInfo].loc[data[CSVData.SutureInfo]["SutureSetCount"] == (i_suture_set+1)].sort_values(["SutureCount"])
         these_grasps: pd.DataFrame = data[CSVData.GraspInfo].loc[data[CSVData.GraspInfo]["SutureSetCount"] == (i_suture_set+1)]
@@ -106,6 +113,7 @@ def main(trial: Path) -> Metrics:
         # metric 17
         first_pos = these_bites[["SuturePosition(x)","SuturePosition(y)","SuturePosition(z)"]].iloc[0]
         first_pos_coords = (first_pos["SuturePosition(x)"], first_pos["SuturePosition(y)"], first_pos["SuturePosition(z)"])
+        print(f"metric 17: first bite is {incisura_angularis.distance_point_signed(first_pos_coords)} away from incisura angularis plane")
         this_set.start = 5 if incisura_angularis.distance_point_signed(first_pos_coords) < one_cm else 0
         # metrics 18-19
         anterior_grasps: pd.DataFrame = these_grasps.loc[these_grasps["StomachZone"] == "Anterior"]
@@ -151,7 +159,11 @@ def main(trial: Path) -> Metrics:
         # FIXME why doesn't cinching visually stop bleeding in the sim? might be affecting the data too
         brisk_bleeds: pd.DataFrame = data[CSVData.BleedingInfo].loc[data[CSVData.BleedingInfo]["BleedingType"] == "Brisk"]
         btimes: pd.Series[float] = brisk_bleeds["BleedingStartTime"]
-        our_bbs: pd.DataFrame = brisk_bleeds.loc[these_grasps["GraspTime"].min() <= btimes <= these_grasps["UngraspTime"].max()]
+        print(f"btimes for suture set {i_suture_set}:")
+        print(btimes)
+        print(these_grasps["GraspTime"].min())
+        print(these_grasps["GraspTime"].max())
+        our_bbs: pd.DataFrame = brisk_bleeds.loc[btimes.between(these_grasps["GraspTime"].min(), these_grasps["GraspTime"].max(), inclusive="both")]
         this_set.did_bleed = len(our_bbs) > 0
         if this_set.did_bleed:
             this_set.severe_bleeding = 0 if ((our_bbs["BleedingFinishTime"] - our_bbs["BleedingStartTime"]) <= 60).all() else 5
@@ -193,4 +205,4 @@ def grasps_close_enough(grasps: pd.DataFrame, marking: pd.DataFrame) -> int:
 
 if __name__ == "__main__":
     import json
-    print(json.dumps(main(Path(sys.argv[1]))))
+    print(json.dumps(dataclasses.asdict(main(Path(sys.argv[1])))))

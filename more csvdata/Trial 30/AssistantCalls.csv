@@ -1,0 +1,103 @@
+Command,Interpretation,SutureSetCount,RecordingStartTime,STTStartTime,LLMStartTime,LLMEndTime
+" Switch to the helix.",ActivateSpring,1,322.3132,325.3266,325.4761,327.5948
+" Get a hold of the tissue.",GraspTissue,1,396.1592,399.1727,399.2463,399.765
+" Let go of the tissue.",UngraspTissue,1,409.6316,412.6481,412.7213,413.261
+" Get a hold of the tissue.",GraspTissue,1,426.5056,429.5248,429.618,430.1036
+" Let go of the tissue.",UngraspTissue,1,440.201,443.2173,443.2805,443.8428
+" Get a hold of the tissue.",GraspTissue,1,464.0646,467.0797,467.1461,467.6578
+" Let go of the tissue.",UngraspTissue,1,477.2965,480.3102,480.4216,480.9688
+" Get a hold of the tissue.",GraspTissue,1,508.8713,511.8865,511.9947,512.485
+" Let go of the tissue.",UngraspTissue,1,522.2846,525.3038,525.3702,525.9332
+" Get a hold of the tissue.",GraspTissue,1,558.293,561.3124,561.3862,561.9033
+" Let go of the tissue.",UngraspTissue,1,569.894,572.9089,572.9973,573.5778
+" Get a hold of the tissue.",GraspTissue,1,595.6084,598.6249,598.6923,599.1906
+" Let go of the tissue.",UngraspTissue,1,613.4134,616.4312,616.5197,617.0916
+" Switch to the T tag.",ActivateTTag,1,630.1284,633.146,633.2151,633.6577
+" Switch to the cinch.",ActivateCinch,1,649.8884,652.9052,653.0217,653.4089
+" Drop to Cinch.",DeployCinch,1,669.1313,672.1465,672.2133,672.6071
+" Switch for the helix.",ActivateSpring,2,724.9089,727.9267,728.0133,728.3309
+" Get a hold of the tissue.",GraspTissue,2,744.9776,747.9929,748.1071,748.5983
+" Let go of the tissue.",UngraspTissue,2,755.3717,758.3898,758.4732,759.0161
+" Get a hold of the tissue.",GraspTissue,2,770.8065,773.8312,773.8979,774.4033
+" Let go of the tissue.",UngraspTissue,2,783.5443,786.566,786.6527,787.1945
+" Get a hold of the tissue.",GraspTissue,2,803.529,806.5456,806.6124,807.1186
+" Let go of the tissue.",UngraspTissue,2,815.1195,818.1333,818.2439,818.7947
+" Get a hold of the tissue.",GraspTissue,2,846.3482,849.3657,849.4351,849.9615
+" Let go of the tissue.",UngraspTissue,2,858.1276,861.1445,861.2139,861.7971
+" Get a hold of the tissue.",GraspTissue,2,880.441,883.4591,883.5488,884.0488
+" Let go of the tissue.",UngraspTissue,2,891.8828,894.9006,894.9911,895.5289
+" Get a hold of the tissue.",GraspTissue,2,908.1906,911.2038,911.2746,911.7831
+" Let go of the tissue.",UngraspTissue,2,919.1637,922.1789,922.2458,922.799
+" Get a hold of the tissue.",GraspTissue,2,941.5026,944.5162,944.6208,945.1166
+" Let go of the tissue.",UngraspTissue,2,953.8033,956.821,956.9311,957.4777
+" Switch to the t-tag.",ActivateTTag,2,967.8691,970.8863,970.9903,971.4087
+" Switch to the cinch.",ActivateCinch,2,985.3206,988.3348,988.4006,988.771
+" Turn up to singe.",GraspTissue,2,1005.807,1008.836,1009.015,1009.487
+" Drop the cinch.",DeployCinch,2,1015.97,1018.987,1019.059,1019.476
+" Switch to the Helix.",ActivateSpring,3,1045.471,1048.484,1048.591,1048.93
+" Get a hold of the tissue.",GraspTissue,3,1076.259,1079.277,1079.367,1079.896
+" Let go of the tissue.",UngraspTissue,3,1087.619,1090.633,1090.712,1091.279
+" Get a hold of the tissue.",GraspTissue,3,1108.307,1111.325,1111.436,1111.926
+" Let go of the tissue.",UngraspTissue,3,1120.005,1123.022,1123.113,1123.689
+" Get a hold of the tissue.",GraspTissue,3,1138.942,1141.96,1142.047,1142.547
+" Let go of the tissue.",UngraspTissue,3,1154.837,1157.853,1157.958,1158.505
+" Get a hold of the tissue.",GraspTissue,3,1189.298,1192.331,1192.416,1192.938
+" Let go of the tissue.",UngraspTissue,3,1207.066,1210.079,1210.148,1210.716
+" Get a hold of the tissue.",GraspTissue,3,1250.729,1253.746,1253.851,1254.361
+" Let go of the tissue.",UngraspTissue,3,1262.557,1265.575,1265.685,1266.232
+" Get a hold of the tissue.",GraspTissue,3,1283.973,1286.99,1287.096,1287.589
+" Let go of the tissue.",UngraspTissue,3,1295.824,1298.842,1298.914,1299.458
+" Switch to the t-tag.",ActivateTTag,3,1304.488,1307.502,1307.572,1308.018
+" Switch to the cinch.",ActivateCinch,3,1327.683,1330.7,1330.816,1331.207
+" Good luck to Saint.",GraspTissue,3,1355.695,1358.71,1358.88,1359.344
+" Drop the cinch.",DeployCinch,3,1365.053,1368.067,1368.134,1368.534
+" Switch to the helix.",ActivateSpring,4,1393.455,1397.48,1397.569,1397.92
+" Get a hold of the tissue.",GraspTissue,4,1440.759,1443.775,1443.888,1444.382
+" Let go of the tissue.",UngraspTissue,4,1452.069,1455.089,1455.177,1455.754
+" Get a hold of the tissue.",GraspTissue,4,1479.123,1482.14,1482.269,1482.778
+" Let go of the tissue.",UngraspTissue,4,1497.619,1500.637,1500.729,1501.27
+" Get a hold of the tissue.",GraspTissue,4,1529.719,1532.737,1532.846,1533.338
+" Let go of the tissue.",UngraspTissue,4,1540.801,1543.815,1543.883,1544.441
+" Get a hold of the tissue.",GraspTissue,4,1565.675,1568.695,1568.753,1569.238
+" Let go of the tissue.",UngraspTissue,4,1577.383,1580.398,1580.471,1581.033
+" Get a hold of the tissue.",GraspTissue,4,1596.852,1599.867,1599.975,1600.469
+" Let go of the tissue.",UngraspTissue,4,1608.814,1611.849,1611.937,1612.515
+" Get a hold of the tissue.",GraspTissue,4,1634.608,1637.625,1637.736,1638.226
+" Let go of the tissue.",UngraspTissue,4,1647.728,1650.745,1650.829,1651.399
+" Switch to the T-Tag.",ActivateTTag,4,1662.834,1665.847,1665.924,1666.345
+" Switch to the cinch.",ActivateCinch,4,1686.945,1689.963,1690.036,1690.418
+" Drop the cinch.",DeployCinch,4,1709.753,1712.77,1712.842,1713.238
+" Switch to the helix.",ActivateSpring,5,1761.234,1764.264,1764.355,1764.709
+" Get a hold of the tissue.",GraspTissue,5,1798.802,1801.822,1801.917,1802.411
+" Let go of the tissue.",UngraspTissue,5,1810.352,1813.368,1813.438,1813.997
+" Get a hold of the tissue.",GraspTissue,5,1841.687,1844.705,1844.797,1845.279
+" Let go of the tissue.",UngraspTissue,5,1859.832,1862.85,1862.963,1863.509
+" Get a hold of the tissue.",GraspTissue,5,1900.127,1903.146,1903.238,1903.723
+" Let go of the tissue.",UngraspTissue,5,1912.651,1915.665,1915.731,1916.294
+" Get a hold of the tissue.",GraspTissue,5,1951.434,1954.465,1954.557,1955.058
+" Let go of the tissue.",UngraspTissue,5,1964.332,1967.349,1967.443,1968.016
+" Get a hold of the tissue.",GraspTissue,5,1989.575,1992.609,1992.689,1993.177
+" Let go of the tissue.",UngraspTissue,5,2001.638,2004.652,2004.718,2005.258
+" Get a hold of the tissue.",GraspTissue,5,2023.076,2026.094,2026.166,2026.672
+" Let go of the tissue.",UngraspTissue,5,2037.14,2040.156,2040.224,2040.785
+" So, you should do your legs.",GraspTissue,5,2048.744,2052.765,2052.942,2053.433
+" Let go of the tissue.",UngraspTissue,5,2059.421,2062.437,2062.531,2063.092
+" Switch to the t-tag.",ActivateTTag,5,2070.709,2073.739,2073.848,2074.266
+" Switch to the cinch.",ActivateCinch,5,2087.227,2090.243,2090.316,2090.729
+" Drop the cinch.",DeployCinch,5,2112.349,2115.369,2115.435,2115.841
+" Switch to the helix.",ActivateSpring,6,2151.966,2155.988,2156.104,2156.424
+" Get a hold of the tissue.",GraspTissue,6,2192.035,2195.053,2195.187,2195.691
+" Let go of the tissue.",UngraspTissue,6,2205.872,2208.887,2208.958,2209.526
+" Get a hold of the tissue.",GraspTissue,6,2242.936,2245.952,2246.078,2246.582
+" Let go of the tissue.",UngraspTissue,6,2255.271,2258.288,2258.354,2258.948
+" Get a hold of the tissue.",GraspTissue,6,2282.603,2285.635,2285.727,2286.203
+" Let go of the tissue.",UngraspTissue,6,2296.369,2299.384,2299.452,2300.02
+" Get a hold of the tissue.",GraspTissue,6,2329.051,2332.066,2332.14,2332.637
+" Let go of the tissue.",UngraspTissue,6,2342.526,2345.544,2345.619,2346.206
+" Get a hold of the tissue.",GraspTissue,6,2371.548,2374.565,2374.632,2375.105
+" Let go of the tissue.",UngraspTissue,6,2383.925,2386.94,2387.02,2387.586
+" Get a hold of the tissue.",GraspTissue,6,2401.032,2404.047,2404.16,2404.653
+" Let go of the tissue.",UngraspTissue,6,2412.753,2415.77,2415.835,2416.406
+" Switch to the T-Tag.",ActivateTTag,6,2431.321,2435.344,2435.476,2435.885
+" Switch to the cinch.",ActivateCinch,6,2451.445,2455.489,2455.571,2455.967
+" Drop to Cinch.",DeployCinch,6,2476.928,2479.949,2480.016,2480.423

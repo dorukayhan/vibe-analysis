@@ -1,0 +1,8 @@
+SutureSetCount,SutureCount,SutureIndex,SutureTime,IsAnchorExchangeDone,StomachPart,SuturePosition(x),SuturePosition(y),SuturePosition(z)
+1,1,3148,171.2897,True,GreaterCurvature,12.7214,1.2533,-0.6470
+1,2,3456,229.8352,True,Fundus,12.6697,1.2693,-0.6918
+1,3,2011,308.2294,True,Anterior,12.7826,1.2851,-0.6109
+1,4,251,416.6685,True,None,12.6848,1.3789,-0.6397
+1,5,652,431.5846,True,None,12.6729,1.3726,-0.6359
+1,6,660,440.3146,True,None,12.6768,1.3864,-0.6633
+1,7,3377,493.0273,True,Fundus,12.6551,1.3419,-0.6898

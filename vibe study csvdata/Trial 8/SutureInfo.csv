@@ -1,0 +1,4 @@
+SutureSetCount,SutureCount,SutureIndex,SutureTime,IsAnchorExchangeDone,StomachPart,SuturePosition(x),SuturePosition(y),SuturePosition(z)
+1,1,1219,513.4229,True,None,12.7562,1.3568,-0.7418
+1,2,1077,599.9079,True,Posterior,12.7679,1.3511,-0.7441
+1,3,1115,714.8358,True,Posterior,12.7652,1.3336,-0.7555

@@ -1,0 +1,6 @@
+BleedingType,BleedingIndex,BleedingStartTime,BleedingFinishTime,BleedingPosition(x),BleedingPosition(y),BleedingPosition(z)
+Mild,1057,61.86012,65.9343,12.7796,1.3455,-0.7437
+Mild,927,95.43245,101.3678,12.7924,1.3462,-0.7357
+Mild,756,173.4851,178.9074,12.8051,1.3575,-0.6987
+Brisk,927,143.4126,143.4126,12.7924,1.3462,-0.7357
+Brisk,1057,163.4743,163.4743,12.7796,1.3455,-0.7437
