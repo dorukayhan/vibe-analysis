@@ -323,7 +323,7 @@ def WELCH(group_1, group_2, **kwargs) -> tuple[str, TtestResult]:
     return alt, scipy.stats.ttest_ind(group_1, group_2, equal_var=False, nan_policy="raise", alternative=alt, **kwargs)
 
 def print_t_test(test: str, result: tuple[str, TtestResult]):
-    print(f"{test} t test: {result}")
+    print(f"{test} t test: {result}, ci: {result[1].confidence_interval(0.95)}")
     if result[1].pvalue < 0.05:
         print("!!!P<0.05 RESULT WOOOOOOOO!!!")
 
