@@ -317,8 +317,9 @@ def perf_scoring(participant: int) -> int:
 # def longest_trial(parti)
 
 def WELCH(group_1, group_2, **kwargs) -> tuple[str, TtestResult]:
-    # 1-tailed welch's t-test. pick correct tail for the caller
-    alt = "less" if statistics.mean(group_1) <= statistics.mean(group_2) else "greater"
+    # 1-tailed welch's t-test. DON'T pick "correct" tail for the caller, instead assume group_1 should be expert
+    # alt = "less" if statistics.mean(group_1) <= statistics.mean(group_2) else "greater"
+    alt = "less"
     return alt, scipy.stats.ttest_ind(group_1, group_2, equal_var=False, nan_policy="raise", alternative=alt, **kwargs)
 
 def print_t_test(test: str, result: tuple[str, TtestResult]):
